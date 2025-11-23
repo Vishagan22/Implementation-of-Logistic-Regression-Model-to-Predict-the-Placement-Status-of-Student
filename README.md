@@ -18,94 +18,60 @@ To write a program to implement the the Logistic Regression Model to Predict the
 
 # Program:
 ```
-/*
-Program to implement the the Logistic Regression Model to Predict the Placement Status of Student.
-Developed by: Vishagan R S
-RegisterNumber:  212224233003
-*/
-
+# Step 1: Import Libraries
 import pandas as pd
-data=pd.read_csv('/content/Placement_Data (1).csv')
-data.head()
-
-data1=data.copy()
-data1=data1.drop(["sl_no","salary"],axis=1) # remove specified row or column
-data1.head()
-
-data1.isnull().sum()
-
-data1.duplicated().sum()
-
-from sklearn.preprocessing import LabelEncoder
-le=LabelEncoder()
-data1["gender"]=le.fit_transform(data1["gender"])
-data1["ssc_b"]=le.fit_transform(data1["ssc_b"])
-data1["hsc_b"]=le.fit_transform(data1["hsc_b"])
-data1["hsc_s"]=le.fit_transform(data1["hsc_s"])
-data1["degree_t"]=le.fit_transform(data1["degree_t"])
-data1["workex"]=le.fit_transform(data1["workex"])
-data1["specialisation"]=le.fit_transform(data1["specialisation"])
-data1["status"]=le.fit_transform(data1["status"])
-data1
-
-x=data1.iloc[:,:-1]
-x
-
-y=data1["status"]
-y
-
+import numpy as np
 from sklearn.model_selection import train_test_split
-x_train,x_test,y_train,y_test=train_test_split(x,y,test_size= 0.2,random_state= 0)
-
 from sklearn.linear_model import LogisticRegression
-lr=LogisticRegression(solver = "liblinear") # A Library for Large Linear Classification
-lr.fit(x_train,y_train)
-y_pred = lr.predict(x_test)
-y_pred
+from sklearn.preprocessing import LabelEncoder
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 
-from sklearn.metrics import accuracy_score
-accuracy = accuracy_score(y_test,y_pred)
-accuracy
+# Step 2: Load the Dataset (upload the file in Colab!)
+df = pd.read_csv('Placement_Data-3.csv')
 
-from sklearn.metrics import confusion_matrix
-confusion = confusion_matrix(y_test,y_pred)
-confusion
+# Step 3: Quick Data Inspection
+print(df.head())
+print(df.info())
 
-from sklearn.metrics import classification_report
-classification_report1 = classification_report(y_test,y_pred)
-print(classification_report1)
+# Step 4: Preprocessing
+# Drop any irrelevant columns if needed (e.g., serial number, salary after placement)
+df = df.drop(['slno', 'salary'], axis=1, errors='ignore')
 
-lr.predict([[1,80,1,90,1,1,90,1,0,85,1,85]])
+# Encode categorical features
+le = LabelEncoder()
+for column in df.columns:
+    if df[column].dtype == 'object':
+        df[column] = le.fit_transform(df[column])
+
+# Step 5: Splitting Data
+X = df.drop('status', axis=1)
+y = df['status']  # 'status' is Placed/Not Placed
+
+# Step 6: Train-Test Split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+# Step 7: Training the Model
+log_model = LogisticRegression(max_iter=1000)
+log_model.fit(X_train, y_train)
+
+# Step 8: Predict & Evaluate
+y_pred = log_model.predict(X_test)
+print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
+print("\nClassification Report:\n", classification_report(y_test, y_pred))
+print("Accuracy Score:", accuracy_score(y_test, y_pred))
+
+# (Optional) Predict for a single student (just as example)
+# sample = np.array([[1, 67, 2, 91, 2, 0, 58, 1, 0, 55, 1, 0, 0, 58.8]]) # this needs to match input order and encoding
+# print('Predicted Placement Status:', log_model.predict(sample))
+
 
 ```
 
 # Output:
-## placement data
-![implement-of-Logistic-Regression-Model-to-Predict-the-Placement-Status-of-Student](1.png)
-## After removing a column
-![implement-of-Logistic-Regression-Model-to-Predict-the-Placement-Status-of-Student](2.png)
-## isnull()
-![implement-of-Logistic-Regression-Model-to-Predict-the-Placement-Status-of-Student](3.png)
-## checking for duplicates
-![implement-of-Logistic-Regression-Model-to-Predict-the-Placement-Status-of-Student](4.png)
-## print data
-![implement-of-Logistic-Regression-Model-to-Predict-the-Placement-Status-of-Student](5.png)
-## X
-![implement-of-Logistic-Regression-Model-to-Predict-the-Placement-Status-of-Student](6.png)
-## Y
-![implement-of-Logistic-Regression-Model-to-Predict-the-Placement-Status-of-Student](8.png)
-## Y_prediction
-![implement-of-Logistic-Regression-Model-to-Predict-the-Placement-Status-of-Student](9.png)
-## Accuracy_score
-![implement-of-Logistic-Regression-Model-to-Predict-the-Placement-Status-of-Student](10.png)
-## confusion matrix
-![implement-of-Logistic-Regression-Model-to-Predict-the-Placement-Status-of-Student](11.png)
-## Classification report
-![implement-of-Logistic-Regression-Model-to-Predict-the-Placement-Status-of-Student](12.png)
-## Prediction of LR
-![implement-of-Logistic-Regression-Model-to-Predict-the-Placement-Status-of-Student](13.png)
 
+<img width="958" height="822" alt="image" src="https://github.com/user-attachments/assets/2bbcd52b-7638-4a69-8882-153b33fc53ce" />
 
+<img width="681" height="336" alt="image" src="https://github.com/user-attachments/assets/6eb580fa-a032-470e-9608-1a87b9b8e7ce" />
 
 # Result:
 Thus the program to implement the the Logistic Regression Model to Predict the Placement Status of Student is written and verified using python programming.
